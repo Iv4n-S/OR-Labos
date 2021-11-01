@@ -1,0 +1,210 @@
+[
+  {
+    "idpive": 1,
+    "naziv": "Heineken",
+    "postalkohola": "5%",
+    "boja": "svijetlo",
+    "vrsta": "lager",
+    "distributerzarh": "Heineken Hrvatska d.o.o.",
+    "drzporjekla": "Nizozemska",
+    "envrijednost100ml": "42 kcal",
+    "pivovara": "Heineken International",
+    "vrstapakiranja": {
+      "idpakiranja": 4,
+      "materijal": "staklena boca",
+      "velicina": "0,33L"
+    }
+  },
+  {
+    "idpive": 2,
+    "naziv": "Paulaner",
+    "postalkohola": "5,5%",
+    "boja": "svijetlo",
+    "vrsta": "pšenično",
+    "distributerzarh": "Dolium d.o.o.",
+    "drzporjekla": "Njemačka",
+    "envrijednost100ml": "47 kcal",
+    "pivovara": "Paulaner Brewerei Gruppe GmbH & Co.",
+    "vrstapakiranja": {
+      "idpakiranja": 1,
+      "materijal": "staklena boca",
+      "velicina": "0,5L"
+    }
+  },
+  {
+    "idpive": 3,
+    "naziv": "Ožujsko ",
+    "postalkohola": "5%",
+    "boja": "svijetlo",
+    "vrsta": "lager",
+    "distributerzarh": null,
+    "drzporjekla": "Hrvatska",
+    "envrijednost100ml": "52 kcal",
+    "pivovara": "Zagrebačka pivovara d.o.o.",
+    "vrstapakiranja": {
+      "idpakiranja": 1,
+      "materijal": "staklena boca",
+      "velicina": "0,5L"
+    }
+  },
+  {
+    "idpive": 4,
+    "naziv": "Karlovačko",
+    "postalkohola": "5%",
+    "boja": "svijetlo",
+    "vrsta": "lager",
+    "distributerzarh": null,
+    "drzporjekla": "Hrvatska",
+    "envrijednost100ml": "56 kcal",
+    "pivovara": "Heineken Hrvatska d.o.o.",
+    "vrstapakiranja": {
+      "idpakiranja": 3,
+      "materijal": "plastična boca",
+      "velicina": "2L"
+    }
+  },
+  {
+    "idpive": 5,
+    "naziv": "Pan",
+    "postalkohola": "5%",
+    "boja": "svijetlo",
+    "vrsta": "pilsner",
+    "distributerzarh": null,
+    "drzporjekla": "Hrvatska ",
+    "envrijednost100ml": "40 kcal",
+    "pivovara": "Carlsberg Croatia d.o.o.",
+    "vrstapakiranja": {
+      "idpakiranja": 2,
+      "materijal": "limenka",
+      "velicina": "0,5L"
+    }
+  },
+  {
+    "idpive": 6,
+    "naziv": "Grička vještica",
+    "postalkohola": "7,5%",
+    "boja": "tamno",
+    "vrsta": "doppelbock",
+    "distributerzarh": null,
+    "drzporjekla": "Hrvatska",
+    "envrijednost100ml": "45 kcal",
+    "pivovara": "Pivovara Medvedgrad d.o.o.",
+    "vrstapakiranja": {
+      "idpakiranja": 1,
+      "materijal": "staklena boca",
+      "velicina": "0,5L"
+    }
+  },
+  {
+    "idpive": 7,
+    "naziv": "Beck's",
+    "postalkohola": "5%",
+    "boja": "svijetlo",
+    "vrsta": "pilsner",
+    "distributerzarh": "Zagrebačka pivovara d.o.o.",
+    "drzporjekla": "Njemačka",
+    "envrijednost100ml": "40 kcal",
+    "pivovara": "Brauerei Beck & Co.",
+    "vrstapakiranja": {
+      "idpakiranja": 2,
+      "materijal": "limenka",
+      "velicina": "0,5L"
+    }
+  },
+  {
+    "idpive": 8,
+    "naziv": "Laško",
+    "postalkohola": "4,9%",
+    "boja": "svijetlo",
+    "vrsta": "lager",
+    "distributerzarh": "Heineken Hrvatska d.o.o.",
+    "drzporjekla": "Slovenija",
+    "envrijednost100ml": "40,6 kcal",
+    "pivovara": "Pivovarna Laško d.d.",
+    "vrstapakiranja": {
+      "idpakiranja": 1,
+      "materijal": "staklena boca",
+      "velicina": "0,5L"
+    }
+  },
+  {
+    "idpive": 9,
+    "naziv": "Grimbergen",
+    "postalkohola": "6%",
+    "boja": "svijetlo",
+    "vrsta": "Witbier",
+    "distributerzarh": "Carlsberg Croatia d.o.o.",
+    "drzporjekla": "Belgija",
+    "envrijednost100ml": "51 kcal",
+    "pivovara": "Carlsberg Supply Complany",
+    "vrstapakiranja": {
+      "idpakiranja": 4,
+      "materijal": "staklena boca",
+      "velicina": "0,33L"
+    }
+  },
+  {
+    "idpive": 10,
+    "naziv": "Budweiser",
+    "postalkohola": "5%",
+    "boja": "svijetlo",
+    "vrsta": "lager",
+    "distributerzarh": "Carlsberg Croatia d.o.o.",
+    "drzporjekla": "Češka",
+    "envrijednost100ml": "42 kcal",
+    "pivovara": "Budweiser Budwar",
+    "vrstapakiranja": {
+      "idpakiranja": 2,
+      "materijal": "limenka",
+      "velicina": "0,5L"
+    }
+  },
+  {
+    "idpive": 11,
+    "naziv": "Heineken",
+    "postalkohola": "5%",
+    "boja": "svijetlo",
+    "vrsta": "lager",
+    "distributerzarh": "Heineken Hrvatska d.o.o.",
+    "drzporjekla": "Nizozemska",
+    "envrijednost100ml": "42",
+    "pivovara": "Heineken International",
+    "vrstapakiranja": {
+      "idpakiranja": 5,
+      "materijal": "limenka",
+      "velicina": "0,4L"
+    }
+  },
+  {
+    "idpive": 12,
+    "naziv": "Ožujsko",
+    "postalkohola": "5%",
+    "boja": "svijetlo",
+    "vrsta": "lager",
+    "distributerzarh": null,
+    "drzporjekla": "Hrvatska",
+    "envrijednost100ml": "52 kcal",
+    "pivovara": "Zagrebačka pivovara d.o.o.",
+    "vrstapakiranja": {
+      "idpakiranja": 3,
+      "materijal": "plastična boca",
+      "velicina": "2L"
+    }
+  },
+  {
+    "idpive": 13,
+    "naziv": "Laško",
+    "postalkohola": "4,9%",
+    "boja": "svijetlo",
+    "vrsta": "lager",
+    "distributerzarh": "Heineken Hrvatska d.o.o.",
+    "drzporjekla": "Slovenija",
+    "envrijednost100ml": "40,6 kcal",
+    "pivovara": "Pivovarna Laško d.d.",
+    "vrstapakiranja": {
+      "idpakiranja": 2,
+      "materijal": "limenka",
+      "velicina": "0,5L"
+    }
+  }
+]
