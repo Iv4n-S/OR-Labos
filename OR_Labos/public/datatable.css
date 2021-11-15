@@ -1,0 +1,39 @@
+.header {
+    background-color: rgb(34, 32, 32);
+}
+.title {
+    display: flex;
+    justify-content: center;
+    color: chartreuse;
+}
+.dt-buttons {
+    display: flex;
+    justify-content: center;
+}
+.dt-button {
+    background-color: rgb(110, 201, 20);
+    margin-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-weight: bold;
+}
+.dataTables_length {
+    background-color: white;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.dataTables_wrapper {
+    border-color: rgb(59, 59, 59);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.fields {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Ivan Špoljar">
+    <meta name="description" content="Ovo je baza podataka s informacijama o pivama">
+    <meta name="keywords" content="pive, piva, pivovara">
+    <link rel="stylesheet" type="text/css" href="./index.css">
+    <title>Pive</title>
+</head>
+<body class = "header">
+    <h1 class = "title">Baza podataka o pivama</h1>  
+    <div class="main">
+        <div>
+            <button class="buttons"><a style="text-decoration: none; color: black;" href="datatable"><strong>Nastavite na bazu podataka</strong></a></button>
+        </div>
+        <p>Ovdje možete preuzeti CSV i JSON datoteke: &nbsp; 
+            <button class = "buttons"><a style="text-decoration: none; color: black;" href="./pive.csv" download="pive.csv"><strong>CSV</strong></a></button>
+            &nbsp;
+            <button class = "buttons"><a style="text-decoration: none; color: black;" href="./pive.json" download="pive.json"><strong>JSON</strong></a></button>
+        </p>
+        <div>
+            <p><strong>Atributi:</strong></p>
+
+            <p>- Entitet Pive: <br>
+                &nbsp;&nbsp; - IdPive - identifikator pive - int, not null, primary key <br>
+                &nbsp;&nbsp; - Naziv - naziv pive - varchar(50), not null <br>
+                &nbsp;&nbsp; - PostAlkohola - postotak alkohola koji piva sadrži, varchar(50), not null <br>
+                &nbsp;&nbsp; - Boja - svijetla ili tamna piva - varchar(50), not null <br>
+                &nbsp;&nbsp; - Vrsta - vrsta pive - varchar(50), not null <br>
+                &nbsp;&nbsp; - DistributerZaRH - distributer za Hrvatsku - varchar(100) <br>
+                &nbsp;&nbsp; - DrPorjekla - država porjekla - varchar(50), not null <br>
+                &nbsp;&nbsp; - EnVrijednost100ml - energetska vrijednost u kalorijama u 100 ml pive - varchar(50) not null <br>
+                &nbsp;&nbsp; - IdPakiranja - identifikator vrste ambalaže - integer, not null <br>
+                &nbsp;&nbsp; - Pivovara - pivovara koja je izmislila pivu - varchar(100), not null <br>
+                <br>
+                - Entitet VrstaPakiranja: <br>
+            
+                &nbsp;&nbsp; - IdPakiranja - identifikator vrste ambalaže - integer, not null, primary key <br>
+                &nbsp;&nbsp; - Materijal - u kakvoj ambalaži je piva spremljena - varchar(50), not null <br>
+                &nbsp;&nbsp; - Velicina - volumen pive sadržan u ambalaži - varchar(50), not null <br>
+                <br>
+                Dodatno: <br>
+                &nbsp;&nbsp; - DistributerZaRH može biti null kada je piva iz Hrvatske <br>
+                &nbsp;&nbsp; - PostAlkohola i EnVrijednost100ml su varchar(50) zbog '%' u PostAlkohola i 'kcal' u EnVrijednost100ml <br>
+                <br><br>
+                <em>Autor: Ivan Špoljar</em><br>
+                <em>Jezik: postgresql</em><br>
+                <em>Licenca: Creative Commons Zero v1.0 Universal</em>
+            </p>
+    </div>
+
+</body>
+</html>

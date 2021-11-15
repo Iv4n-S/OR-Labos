@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pive</title>
+    <link rel="stylesheet" type="text/css" href="./datatable.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>  
+</head>
+<body class="header">
+    <script>
+        $(document).ready( function () {
+            var datatable = $('#Table').DataTable( {
+                lengthMenu: [10, 15, 50],
+                dom: 'Brltip',
+                processing: true,
+                buttons: [
+                    'csv',
+                    {
+                        text: 'JSON',
+                        action: function (err, table, button, config) {
+                            var data = table.buttons.exportData();
+                            $.fn.dataTable.fileSave(
+                                new Blob ([JSON.stringify(data)]),
+                                'Pive.json'
+                            );
+                        }
+                    }
+                ]
+            });
+            var filterOption = 10;
+            var filter;
+
+            $("#filterOption").on('change', function() {
+                filterOption = this.value;
+            });
+            $("#filterSearch").on('change', function() {
+                filter = this.value;
+            });
+            $("#pretrazi").on('click', function(e) {
+                e.preventDefault();
+                if(filterOption == 10) {
+                    datatable.search(filter).draw();
+                }
+                else {
+                    datatable.columns(filterOption).search(filter).draw();
+                }
+            })
+
+        } );
+    </script>
+    <h1 class="title">Baza podataka o pivama</h1>
+    <div style="background-color: rgb(182, 179, 179);">
+    <table id="Table" name="Table" class="display cell-border" style="width: 100%; text-align: left;">
+        <div style="display: flex; justify-content: center; padding-top: 15px; margin-bottom: 15px;"> 
+            <form method="post">
+                <select class="fields" name="filterOption" id="filterOption"> 
+                    <option value=10 selected>Pretraži sve</option>
+                    <option value=0>Naziv</option>
+                    <option value=1>Postotak alkohola</option>
+                    <option value=2>Boja</option>
+                    <option value=3>Vrsta</option>
+                    <option value=4>Distributer za RH</option>
+                    <option value=5>Država porjekla</option>
+                    <option value=6>En. Vrijednost(100mL)</option>
+                    <option value=7>Pivovara</option>
+                    <option value=8>Materijal</option>
+                    <option value=9>Velicina</option>
+                </select> 
+                &nbsp;&nbsp;
+                <input class="fields" name="filterSearch" type="text" id="filterSearch" placeholder="Unesite vrijednost" required>
+                &nbsp;&nbsp;
+                <button class="dt-button" name ="pretrazi" id="pretrazi">Pretraži</button>
+            </form>
+        </div>   
+        <thead style="background-color: rgb(182, 179, 179)"> 
+            <tr >
+                <th>Naziv</th>
+                <th>Postotak alkohola</th>
+                <th>Boja</th>
+                <th>Vrsta</th>
+                <th>Distributer za RH</th>
+                <th>Država porjekla</th>
+                <th>En. Vrijednost(100mL)</th>
+                <th>Pivovara</th>
+                <th>Materijal</th>
+                <th>Velicina</th>
+            </tr>
+        </thead>
+        <tbody >
+            <% for(let d of data) { %>
+                <tr>
+                    <th><%= d.naziv %></th>
+                    <th><%= d.postalkohola %></th>
+                    <th><%= d.boja %></th>
+                    <th><%= d.vrsta %></th>
+                    <th><%= d.distributerzarh %></th>
+                    <th><%= d.drzporjekla %></th>
+                    <th><%= d.envrijednost100ml %></th>
+                    <th><%= d.pivovara %></th>
+                    <th><%= d.materijal %></th>
+                    <th><%= d.velicina %></th>
+                </tr>
+            <% } %>
+        </tbody>   
+    </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,232 @@
+﻿{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "array",
+    "title": "Pive",
+    "description": "Ovo je baza podataka s informacijama o pivama.",
+    "default": [],
+    "examples": [
+        [
+            {
+                "idpive": 1,
+                "naziv": "Heineken",
+                "postalkohola": "5%",
+                "boja": "svijetlo",
+                "vrsta": "lager",
+                "distributerzarh": "Heineken Hrvatska d.o.o.",
+                "drzporjekla": "Nizozemska",
+                "envrijednost100ml": "42 kcal",
+                "pivovara": "Heineken International",
+                "vrstapakiranja": {
+                    "idpakiranja": 4,
+                    "materijal": "staklena boca",
+                    "velicina": "0,33L"
+                }
+            },
+            {
+                "idpive": 2,
+                "naziv": "Paulaner",
+                "postalkohola": "5,5%",
+                "boja": "svijetlo",
+                "vrsta": "pšenično",
+                "distributerzarh": "Dolium d.o.o.",
+                "drzporjekla": "Njemačka",
+                "envrijednost100ml": "47 kcal",
+                "pivovara": "Paulaner Brewerei Gruppe GmbH & Co.",
+                "vrstapakiranja": {
+                    "idpakiranja": 1,
+                    "materijal": "staklena boca",
+                    "velicina": "0,5L"
+                }
+            }
+        ]
+    ],
+    "additionalItems": true,
+    "items": {
+        "$id": "#/items",
+        "anyOf": [
+            {
+                "$id": "#/items/anyOf/0",
+                "type": "object",
+                "title": "The first anyOf schema",
+                "description": "Prvi podatak iz tablice.",
+                "default": {},
+                "examples": [
+                    {
+                        "idpive": 1,
+                        "naziv": "Heineken",
+                        "postalkohola": "5%",
+                        "boja": "svijetlo",
+                        "vrsta": "lager",
+                        "distributerzarh": "Heineken Hrvatska d.o.o.",
+                        "drzporjekla": "Nizozemska",
+                        "envrijednost100ml": "42 kcal",
+                        "pivovara": "Heineken International",
+                        "vrstapakiranja": {
+                            "idpakiranja": 4,
+                            "materijal": "staklena boca",
+                            "velicina": "0,33L"
+                        }
+                    }
+                ],
+                "required": [
+                    "idpive",
+                    "naziv",
+                    "postalkohola",
+                    "boja",
+                    "vrsta",
+                    "distributerzarh",
+                    "drzporjekla",
+                    "envrijednost100ml",
+                    "pivovara",
+                    "vrstapakiranja"
+                ],
+                "properties": {
+                    "idpive": {
+                        "$id": "#/items/anyOf/0/properties/idpive",
+                        "type": "integer",
+                        "title": "The idpive schema",
+                        "description": "Identifikator pive.",
+                        "default": 0,
+                        "examples": [
+                            1
+                        ]
+                    },
+                    "naziv": {
+                        "$id": "#/items/anyOf/0/properties/naziv",
+                        "type": "string",
+                        "title": "The naziv schema",
+                        "description": "Naziv pive.",
+                        "default": "",
+                        "examples": [
+                            "Heineken"
+                        ]
+                    },
+                    "postalkohola": {
+                        "$id": "#/items/anyOf/0/properties/postalkohola",
+                        "type": "string",
+                        "title": "The postalkohola schema",
+                        "description": "Postotak alkohola koji piva sadrži.",
+                        "default": "",
+                        "examples": [
+                            "5%"
+                        ]
+                    },
+                    "boja": {
+                        "$id": "#/items/anyOf/0/properties/boja",
+                        "type": "string",
+                        "title": "The boja schema",
+                        "description": "Svijetla ili tamna piva.",
+                        "default": "",
+                        "examples": [
+                            "svijetlo"
+                        ]
+                    },
+                    "vrsta": {
+                        "$id": "#/items/anyOf/0/properties/vrsta",
+                        "type": "string",
+                        "title": "The vrsta schema",
+                        "description": "Vrsta pive.",
+                        "default": "",
+                        "examples": [
+                            "lager"
+                        ]
+                    },
+                    "distributerzarh": {
+                        "$id": "#/items/anyOf/0/properties/distributerzarh",
+                        "type": [ "string", "null" ],
+                        "title": "The distributerzarh schema",
+                        "description": "Distributer za Hrvatsku.",
+                        "default": "",
+                        "examples": [
+                            "Heineken Hrvatska d.o.o."
+                        ]
+                    },
+                    "drzporjekla": {
+                        "$id": "#/items/anyOf/0/properties/drzporjekla",
+                        "type": "string",
+                        "title": "The drzporjekla schema",
+                        "description": "Država porjekla.",
+                        "default": "",
+                        "examples": [
+                            "Nizozemska"
+                        ]
+                    },
+                    "envrijednost100ml": {
+                        "$id": "#/items/anyOf/0/properties/envrijednost100ml",
+                        "type": "string",
+                        "title": "The envrijednost100ml schema",
+                        "description": "Energetska vrijednost u kalorijama u 100 ml pive.",
+                        "default": "",
+                        "examples": [
+                            "42 kcal"
+                        ]
+                    },
+                    "pivovara": {
+                        "$id": "#/items/anyOf/0/properties/pivovara",
+                        "type": "string",
+                        "title": "The pivovara schema",
+                        "description": "Pivovara koja je izmislila pivu.",
+                        "default": "",
+                        "examples": [
+                            "Heineken International"
+                        ]
+                    },
+                    "vrstapakiranja": {
+                        "$id": "#/items/anyOf/0/properties/vrstapakiranja",
+                        "type": "object",
+                        "title": "The vrstapakiranja schema",
+                        "description": "Vrsta pakiranja pive, ambalaža.",
+                        "default": {},
+                        "examples": [
+                            {
+                                "idpakiranja": 4,
+                                "materijal": "staklena boca",
+                                "velicina": "0,33L"
+                            }
+                        ],
+                        "required": [
+                            "idpakiranja",
+                            "materijal",
+                            "velicina"
+                        ],
+                        "properties": {
+                            "idpakiranja": {
+                                "$id": "#/items/anyOf/0/properties/vrstapakiranja/properties/idpakiranja",
+                                "type": "integer",
+                                "title": "The idpakiranja schema",
+                                "description": "Identifikator vrste ambalaže.",
+                                "default": 0,
+                                "examples": [
+                                    4
+                                ]
+                            },
+                            "materijal": {
+                                "$id": "#/items/anyOf/0/properties/vrstapakiranja/properties/materijal",
+                                "type": "string",
+                                "title": "The materijal schema",
+                                "description": "U kakvoj ambalaži je piva spremljena .",
+                                "default": "",
+                                "examples": [
+                                    "staklena boca"
+                                ]
+                            },
+                            "velicina": {
+                                "$id": "#/items/anyOf/0/properties/vrstapakiranja/properties/velicina",
+                                "type": "string",
+                                "title": "The velicina schema",
+                                "description": "Volumen pive sadržan u ambalaži.",
+                                "default": "",
+                                "examples": [
+                                    "0,33L"
+                                ]
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                },
+                "additionalProperties": true
+            }
+        ]
+    }
+}
