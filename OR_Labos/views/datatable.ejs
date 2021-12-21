@@ -12,15 +12,44 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>  
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
 </head>
 <body class="header">
     <script>
-        $(document).ready( function () {
-            var datatable = $('#Table').DataTable( {
+        var filterOption = "all";
+        var filter = "";
+        var datatable;
+        var details;
+        var editId = null;
+        
+        $(document).ready( async function () {
+            var dataList = await getData();
+            datatable = $('#Table').DataTable( {
                 lengthMenu: [10, 15, 50],
                 dom: 'Brltip',
                 processing: true,
+                data: dataList,
+                columns: [
+                    { title: "Naziv" },
+                    { title: "Postotak alkohola" },
+                    { title: "Boja" },
+                    { title: "Vrsta" },
+                    { title: "Distributer za RH" },
+                    { title: "Država porjekla" },
+                    { title: "En. Vrijednost(100mL)" },
+                    { title: "Pivovara" },
+                    { title: "Materijal" },
+                    { title: "Velicina" },
+                    { title: "Detalji" , wrap: true, render: function (item) 
+                        { return '<div class="btn-group" style="display: flex; justify-content: center;"> <button type="button" onclick="showDetails(' + item + ')" value="0" class="btn btn-warning">Prikaži</button></div>' } 
+                    },
+                    { title: "Uređivanje" , wrap: true, render: function (item) 
+                        { return '<div class="btn-group" style="display: flex; justify-content: center;"> <button type="button" onclick="setEditEntry(' + item + ')" value="0" class="btn btn-warning">Uredi</button></div>' } 
+                    },
+                    { title: "Brisanje" , wrap: true, render: function (item) 
+                        { return '<div class="btn-group" style="display: flex; justify-content: center;"> <button type="button" onclick="deleteEntry(' + item + ')" value="0" class="btn btn-warning">Izbriši</button></div>' } 
+                    },
+                ],
                 buttons: [
                     'csv',
                     {
@@ -32,12 +61,50 @@
                                 'Pive.json'
                             );
                         }
+                    },
+                    {
+                        text: 'Dodaj novi zapis',
+                        action: async function (e, table, config) {
+                            document.getElementById("detalji").hidden = true;
+                            document.getElementById("uredivanje").hidden = true;
+                            document.getElementById("nazivi").hidden = true;
+                            document.getElementById("newEntry").hidden = false;
+                            document.getElementById("pakiranja").hidden = true;
+                        }
+                    },
+                    {
+                        text: 'Nazivi pivi',
+                        action: async function (e, table, config) {
+                            showTitles();
+                        }
+                    },
+                    {
+                        text: 'Pakiranja',
+                        action: async function (e, table, config) {
+                            showPackaging();
+                        }
+                    },
+                    {
+                        text: 'Zadnji upis',
+                        action: async function (e, table, config) {
+                            showLastEntry();
+                        }
+                    },
+                    {
+                        text: 'OpenAPI',
+                        action: async function (e, table, config) {
+                            var file = await fetch('/datatable/openapi');
+                            console.log(file);
+                            var link = document.createElement("a");                
+                            link.setAttribute('download', "openapi.json");
+                            link.href = file.url;
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+                        }
                     }
                 ]
             });
-            var filterOption = 10;
-            var filter;
-
             $("#filterOption").on('change', function() {
                 filterOption = this.value;
             });
@@ -55,62 +122,392 @@
             })
 
         } );
+
+        async function getData() {
+            var dataList = [];
+            var data = await fetch ('/datatable/data');
+            var dataField = await data.json();
+            dataField = dataField.response;
+            for (var d of dataField) {
+                var list = [];
+                var id = "";
+                for (var [key, value] of Object.entries(d)) {
+                    if(key !== "idpakiranja") { 
+                        if(key !== "idpive") {
+                            list.push(value);
+                        }
+                        else {
+                            id=value;
+                        }
+                    }                    
+                }
+                list.push(id);
+                list.push(id);
+                list.push(id);
+                dataList.push(list); 
+            }
+            return dataList;
+        }        
+        
+        async function showDetails(piva) {
+            document.getElementById("newEntry").hidden = true;
+            document.getElementById("uredivanje").hidden = true;
+            document.getElementById("nazivi").hidden = true;
+            document.getElementById("pakiranja").hidden = true;
+            details = await fetch('/datatable/details/'+piva);
+            var detailsJson = await details.json();
+            detailsJson = detailsJson.response;
+            document.getElementById("detalji").hidden = false;
+            document.getElementById("dist").hidden = false;
+            for (var [key, value] of Object.entries(detailsJson[0])) {
+                if(key !== "idpive" && key !== "idpakiranja") { 
+                    if(value !== null && value !== "") {
+                        document.getElementById(key+"Detalji").value = value; 
+                    } 
+                    else {
+                        document.getElementById("dist").hidden = true;
+                    }
+                } 
+                else if(key === "idpive") {
+                    document.getElementById("setToEditButton").value = value;
+                }     
+            }        
+        }
+        async function addNewEntry() {
+            var formattedData = {
+                "naziv": document.getElementById("naziv").value,
+                "postalkohola": document.getElementById("postalkohola").value,
+                "boja": document.getElementById("boja").value,
+                "vrsta": document.getElementById("vrsta").value,
+                "distributerzarh": document.getElementById("distributerzarh").value,
+                "drzporjekla": document.getElementById("drzporjekla").value,
+                "envrijednost100ml": document.getElementById("envrijednost100ml").value,
+                "pivovara": document.getElementById("pivovara").value,
+                "materijal": document.getElementById("materijal").value,
+                "velicina": document.getElementById("velicina").value
+            }; 
+            try {
+                await fetch("/datatable/new", {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(formattedData)
+                    })
+                    .then(res => {
+                        window.alert("Dodan zapis!");
+                });  
+            }  
+            catch(err) {
+                console.error(err);
+            }   
+        }
+        async function deleteEntry(piva) {
+            try {
+                await fetch('/datatable/delete/'+piva, { 
+                    method: "DELETE", 
+                    headers: {'Content-Type': 'application/json'} 
+                }).then(res => {
+                    window.alert("Izbrisan zapis!")
+                }).then(() => window.location.reload());
+            }
+            catch(err) {
+                console.error(err);
+            }               
+        }
+        async function setEditEntry(piva) {
+            document.getElementById("newEntry").hidden = true;
+            document.getElementById("detalji").hidden = true;
+            document.getElementById("nazivi").hidden = true;
+            document.getElementById("pakiranja").hidden = true;
+            details = await fetch('/datatable/details/'+piva);
+            var detailsJson = await details.json();
+            detailsJson = detailsJson.response;
+            document.getElementById("uredivanje").hidden = false;
+            for (var [key, value] of Object.entries(detailsJson[0])) {
+                if(key !== "idpive" && key !== "idpakiranja") { 
+                    document.getElementById(key+"Edit").value = value; 
+                }   
+            }   
+            editId=piva; 
+        }
+        async function editEntry() {
+            var formattedData = {
+                "naziv": document.getElementById("nazivEdit").value,
+                "postalkohola": document.getElementById("postalkoholaEdit").value,
+                "boja": document.getElementById("bojaEdit").value,
+                "vrsta": document.getElementById("vrstaEdit").value,
+                "distributerzarh": document.getElementById("distributerzarhEdit").value,
+                "drzporjekla": document.getElementById("drzporjeklaEdit").value,
+                "envrijednost100ml": document.getElementById("envrijednost100mlEdit").value,
+                "pivovara": document.getElementById("pivovaraEdit").value,
+                "materijal": document.getElementById("materijalEdit").value,
+                "velicina": document.getElementById("velicinaEdit").value
+            }; 
+            try {
+                await fetch("/datatable/edit/"+editId, {
+                    method: "PUT",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(formattedData)
+                    });
+            }  
+            catch(err) {
+                console.error(err);
+            }   
+        }
+        async function showTitles() {
+            document.getElementById("newEntry").hidden = true;
+            document.getElementById("uredivanje").hidden = true;
+            document.getElementById("detalji").hidden = true;
+            document.getElementById("pakiranja").hidden = true;
+            var titles = await fetch('/datatable/pive/nazivi');
+            var titlesJson = await titles.json();
+            titlesJson = titlesJson.response;
+            var provjera = document.getElementById("listaNazivaUl");
+            if(provjera !== null) { 
+                document.getElementById("listaNazivaUl").remove();
+            }            
+            document.getElementById("nazivi").hidden = false;
+            var lista = document.createElement("ul");
+            lista.setAttribute("id", "listaNazivaUl");
+            lista.setAttribute("style", "list-style: none; padding-left: 0px;");
+            for (var [key, value] of Object.entries(titlesJson)) { 
+                var elementListe = document.createElement("li");
+                elementListe.setAttribute("style", "padding-bottom: 10px;");
+                elementListe.textContent = value.naziv;      
+                lista.appendChild(elementListe); 
+            } 
+            document.getElementById("listaNaziva").appendChild(lista); 
+        }
+        async function showPackaging() {
+            document.getElementById("newEntry").hidden = true;
+            document.getElementById("uredivanje").hidden = true;
+            document.getElementById("detalji").hidden = true;
+            document.getElementById("nazivi").hidden = true;
+            var pakiranja = await fetch('/datatable/pive/pakiranja');
+            var pakiranjaJson = await pakiranja.json();
+            pakiranjaJson = pakiranjaJson.response;
+            var provjera = document.getElementById("listaPakiranjaUl");
+            if(provjera !== null) { 
+                document.getElementById("listaPakiranjaUl").remove();
+            }            
+            document.getElementById("pakiranja").hidden = false;
+            var lista = document.createElement("ul");
+            lista.setAttribute("id", "listaPakiranjaUl");
+            lista.setAttribute("style", "list-style: none; padding-left: 0px;");
+            for (var [key, value] of Object.entries(pakiranjaJson)) { 
+                var elementListe = document.createElement("li");
+                elementListe.setAttribute("style", "padding-bottom: 10px;");
+                elementListe.textContent = value.materijal + " ("  + value.velicina + ")";      
+                lista.appendChild(elementListe); 
+            } 
+            document.getElementById("listaPakiranja").appendChild(lista);        
+        }
+        async function showLastEntry() {
+            document.getElementById("newEntry").hidden = true;
+            document.getElementById("uredivanje").hidden = true;
+            document.getElementById("nazivi").hidden = true;
+            document.getElementById("pakiranja").hidden = true;
+            lastEntry = await fetch('/datatable/pive/last');
+            var lastEntryJson = await lastEntry.json();
+            lastEntryJson = lastEntryJson.response;
+            document.getElementById("detalji").hidden = false;
+            document.getElementById("dist").hidden = false;
+            for (var [key, value] of Object.entries(lastEntryJson[0])) {
+                if(key !== "idpive" && key !== "idpakiranja") { 
+                    if(value !== null && value !== "") {
+                        document.getElementById(key+"Detalji").value = value; 
+                    } 
+                    else {
+                        document.getElementById("dist").hidden = true;
+                    }
+                }
+                else if(key === "idpive") {
+                    document.getElementById("setToEditButton").value = value;
+                }   
+            }  
+        }
+        
     </script>
-    <h1 class="title">Baza podataka o pivama</h1>
-    <div style="background-color: rgb(182, 179, 179);">
-    <table id="Table" name="Table" class="display cell-border" style="width: 100%; text-align: left;">
-        <div style="display: flex; justify-content: center; padding-top: 15px; margin-bottom: 15px;"> 
-            <form method="post">
-                <select class="fields" name="filterOption" id="filterOption"> 
-                    <option value=10 selected>Pretraži sve</option>
-                    <option value=0>Naziv</option>
-                    <option value=1>Postotak alkohola</option>
-                    <option value=2>Boja</option>
-                    <option value=3>Vrsta</option>
-                    <option value=4>Distributer za RH</option>
-                    <option value=5>Država porjekla</option>
-                    <option value=6>En. Vrijednost(100mL)</option>
-                    <option value=7>Pivovara</option>
-                    <option value=8>Materijal</option>
-                    <option value=9>Velicina</option>
-                </select> 
-                &nbsp;&nbsp;
-                <input class="fields" name="filterSearch" type="text" id="filterSearch" placeholder="Unesite vrijednost" required>
-                &nbsp;&nbsp;
-                <button class="dt-button" name ="pretrazi" id="pretrazi">Pretraži</button>
-            </form>
-        </div>   
-        <thead style="background-color: rgb(182, 179, 179)"> 
-            <tr >
-                <th>Naziv</th>
-                <th>Postotak alkohola</th>
-                <th>Boja</th>
-                <th>Vrsta</th>
-                <th>Distributer za RH</th>
-                <th>Država porjekla</th>
-                <th>En. Vrijednost(100mL)</th>
-                <th>Pivovara</th>
-                <th>Materijal</th>
-                <th>Velicina</th>
-            </tr>
-        </thead>
-        <tbody >
-            <% for(let d of data) { %>
-                <tr>
-                    <th><%= d.naziv %></th>
-                    <th><%= d.postalkohola %></th>
-                    <th><%= d.boja %></th>
-                    <th><%= d.vrsta %></th>
-                    <th><%= d.distributerzarh %></th>
-                    <th><%= d.drzporjekla %></th>
-                    <th><%= d.envrijednost100ml %></th>
-                    <th><%= d.pivovara %></th>
-                    <th><%= d.materijal %></th>
-                    <th><%= d.velicina %></th>
-                </tr>
-            <% } %>
-        </tbody>   
-    </table>
-    </div>
-</body>
+        <h1 class="title">Baza podataka o pivama</h1>
+        <div style="background-color: rgb(182, 179, 179);">
+            <table id="Table" name="Table" class="display cell-border" style="width: 100%; text-align: left;">
+                <div style="display: flex; justify-content: center; padding-top: 15px; margin-bottom: 15px;">
+                    <form method="post">
+                        <select class="fields" name="filterOption" id="filterOption">
+                            <option value="10" selected>Pretraži sve</option>
+                            <option value="0">Naziv</option>
+                            <option value="1">Postotak alkohola</option>
+                            <option value="2">Boja</option>
+                            <option value="3">Vrsta</option>
+                            <option value="4">Distributer za RH</option>
+                            <option value="5">Država porjekla</option>
+                            <option value="6">En. Vrijednost(100mL)</option>
+                            <option value="7">Pivovara</option>
+                            <option value="8">Materijal</option>
+                            <option value="9">Velicina</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <input class="fields" name="filterSearch" type="text" id="filterSearch"
+                            placeholder="Unesite vrijednost" required>
+                        &nbsp;&nbsp;
+                        <button class="dt-button" name="pretrazi" id="pretrazi">Pretraži</button>
+                    </form>  
+                </div>
+                <div id="newEntry" style="text-align: center;" hidden>
+                    <form id="newForm" onsubmit="addNewEntry()">
+                        <div style="margin-bottom: 10px; margin-top: 30px;">
+                            <label>Naziv: </label>
+                            <input id="naziv" required> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Postotak alkohola: </label>
+                            <input id="postalkohola" required> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Boja: </label>
+                            <input id="boja" required> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Vrsta: </label>
+                            <input id="vrsta" required> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Distributer za RH: </label>
+                            <input id="distributerzarh"> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Država porjekla: </label>
+                            <input id="drzporjekla" required> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>En. Vrijednost(100mL): </label>
+                            <input id="envrijednost100ml" required> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Pivovara: </label>
+                            <input id="pivovara" required> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Materijal: </label>
+                            <input id="materijal" required> 
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Velicina: </label>
+                            <input id="velicina" required> 
+                        </div>
+                        <button class="dt-button" style="margin-bottom: 30px;" onClick="document.getElementById('newEntry').hidden = true;">Odustani</button>
+                        <button class="dt-button" style="margin-bottom: 30px;" type="submit">Dodaj</button>
+                    </form>
+                </div>
+                <thead style="background-color: rgb(182, 179, 179)">
+                    <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    </tr>          
+                </tbody> 
+            </table>  
+            <br />
+            <div style="text-align: center; padding: 10px;" id="nazivi" name="nazivi" hidden>
+                <h2>Nazivi pivi: </h2>
+                <div id="listaNaziva" name="listaNaziva"></div>  
+                <button class="dt-button" style="margin-bottom: 20px;" onClick="document.getElementById('nazivi').hidden = true;">Sakrij</button>              
+            </div>
+            <div style="text-align: center; padding: 10px;" id="pakiranja" name="pakiranja" hidden>
+                <h2>Pakiranja pivi: </h2>
+                <div id="listaPakiranja" name="listaPakiranja"></div>  
+                <button class="dt-button" style="margin-bottom: 20px;" onClick="document.getElementById('pakiranja').hidden = true;">Sakrij</button>              
+            </div>
+            <div style="text-align: center;" id="detalji" name="detalji" hidden>
+                <div style="margin-bottom: 10px;">
+                    <label>Naziv: </label>
+                    <input id="nazivDetalji" readonly> 
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>Postotak alkohola: </label>
+                    <input id="postalkoholaDetalji" readonly> 
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>Boja: </label>
+                    <input id="bojaDetalji" readonly> 
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>Vrsta: </label>
+                    <input id="vrstaDetalji" readonly> 
+                </div>
+                <div id="dist" style="margin-bottom: 10px;">
+                    <label>Distributer za RH: </label>
+                    <input id="distributerzarhDetalji" readonly> 
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>Država porjekla: </label>
+                    <input id="drzporjeklaDetalji" readonly> 
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>En. Vrijednost(100mL): </label>
+                    <input id="envrijednost100mlDetalji" readonly> 
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>Pivovara: </label>
+                    <input id="pivovaraDetalji" readonly> 
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label>Materijal: </label>
+                    <input id="materijalDetalji" readonly> 
+                </div>
+                <div style="margin-bottom: 10px; padding-bottom: 10px;">
+                    <label>Velicina: </label>
+                    <input id="velicinaDetalji" readonly> 
+                </div>
+                <button class="dt-button" style="margin-bottom: 30px;" onClick="document.getElementById('detalji').hidden = true;">Sakrij</button>
+                <button id="setToEditButton" class="dt-button" style="margin-bottom: 30px;" onclick="setEditEntry(value)">Uredi</button>
+            </div>
+            <div style="text-align: center;" id="uredivanje" name="uredivanje" hidden>
+                <form id="editForm" onsubmit="editEntry()">
+                    <div style="margin-bottom: 10px;">
+                        <label>Naziv: </label>
+                        <input id="nazivEdit" required> 
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>Postotak alkohola: </label>
+                        <input id="postalkoholaEdit" required> 
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>Boja: </label>
+                        <input id="bojaEdit" required> 
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>Vrsta: </label>
+                        <input id="vrstaEdit" required> 
+                    </div>
+                    <div id="dist" style="margin-bottom: 10px;">
+                        <label>Distributer za RH: </label>
+                        <input id="distributerzarhEdit"> 
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>Država porjekla: </label>
+                        <input id="drzporjeklaEdit" required> 
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>En. Vrijednost(100mL): </label>
+                        <input id="envrijednost100mlEdit" required> 
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>Pivovara: </label>
+                        <input id="pivovaraEdit" required> 
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label>Materijal: </label>
+                        <input id="materijalEdit" required> 
+                    </div>
+                    <div style="margin-bottom: 10px; padding-bottom: 10px;">
+                        <label>Velicina: </label>
+                        <input id="velicinaEdit" required> 
+                    </div>
+                    <button class="dt-button" style="margin-bottom: 30px;" onClick="document.getElementById('uredivanje').hidden = true;">Sakrij</button>
+                    <button class="dt-button" style="margin-bottom: 30px;" type="submit">Spremi</button>
+                </form>
+            </div>
+        </div>
+    </body>
 </html>

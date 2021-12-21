@@ -5,6 +5,7 @@ var path = require('path');
 const indexRouter = require('./Routes/index.routes');
 const datatableRouter = require('./Routes/datatable.routes');
 
+server.use(express.json());
 server.set('views', path.join(__dirname, 'views'));
 server.set('view engine', 'ejs');
 server.use(express.urlencoded({ extended: true}));
